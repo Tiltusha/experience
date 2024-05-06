@@ -29,3 +29,16 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+const btnScroll = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+btnScroll.addEventListener('click', () => {
+  // window.scrollTo({
+  //   left: section1.getBoundingClientRect().left + window.pageXOffset, 
+  //   top: section1.getBoundingClientRect().top + window.pageYOffset,
+  //   behavior: 'smooth'
+  // })
+  section1.scrollIntoView({ behavior: 'smooth' })
+})
+console.log(btnScroll.getBoundingClientRect())
