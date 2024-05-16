@@ -81,3 +81,69 @@ tabContainer.addEventListener('click', function (e) {
   });
   document.querySelector(`.operations__content--${clickedTab.dataset.tab}`).classList.add('operations__content--active')
 })
+
+
+// Функция hover() меняет прозрачность ссылок и логотипа навигации при наведении
+const nav = document.querySelector('.nav');
+function hover(e, opacity) {
+    // Если была нажата ссылка навигации
+    if(e.target.classList.contains('nav__link')) {
+      const link = e.target; // Получаем ссылку
+      const sibling = link.closest('.nav').querySelectorAll('.nav__link'); // Получаем все ссылки навигации
+      const logo = link.closest('.nav').querySelector('.nav__logo'); // Получаем логотип
+  
+      sibling.forEach(el => {
+        if (el != link) { // Если это не ссылка на которую навели
+          el.style.opacity = this; // Меняем прозрачность
+        }
+      });
+      logo.style.opacity = this; // Меняем прозрачность логотипа
+    }
+}
+
+// полупрозрачная навигация
+// при наведении на кнопку меняется прозрачность
+nav.addEventListener('mouseover', hover.bind(0.5));
+// при отпускании кнопки прозрачность возвращается на исходное
+nav.addEventListener('mouseout', hover.bind(1));
+
+
+// появление меню после прокрутки страницы
+// старый метод
+// const coord = section1.getBoundingClientRect()
+// window.addEventListener('scroll', function () {
+//   if (window.pageYOffset > coord.top) {
+//     nav.classList.add('sticky')
+//   } else {nav.classList.remove('sticky')}
+// })
+
+const navContainer = document.querySelector('.nav')
+
+function callBack(entries) {
+  if (!entries[0].isIntersecting) {
+    navContainer.classList.add('sticky')
+  } else {
+    navContainer.classList.remove('sticky')
+  }
+};
+const options = {threshold: 0, rootMargin: '-90px'};
+
+const observer = new IntersectionObserver(callBack, options)
+observer.observe(document.querySelector('.header'))
+
+// всплытие секций
+const allSections = document.querySelectorAll('.section');
+
+function revealSections(entries, observe) {
+  if (entries[0].isIntersecting) {
+    entries[0].target.classList.remove('section--hidden');
+    observe.unobserve(entries[0].target);
+  }
+}
+
+const sectionsObserver = new IntersectionObserver(revealSections, {threshold: 0.15});
+
+allSections.forEach(section => {
+  sectionsObserver.observe(section);
+  section.classList.add('section--hidden');
+})
