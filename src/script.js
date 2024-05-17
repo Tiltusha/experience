@@ -147,3 +147,16 @@ allSections.forEach(section => {
   sectionsObserver.observe(section);
   section.classList.add('section--hidden');
 })
+
+// ленивая загрузка изображений
+const images = document.querySelectorAll('img[data-src]');
+
+function loadImg(entries, observer) {
+  entries[0].target.src = entries[0].target.dataset.src;
+  entries[0].target.classList.remove('lazy-img');
+};
+const imgObserver = new IntersectionObserver(loadImg, {threshold: 0.15});
+
+images.forEach(image => {
+  imgObserver.observe(image);
+})
