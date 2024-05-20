@@ -61,7 +61,6 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 });
 
 // работа табов
-
 const tabs = document.querySelectorAll('.operations__tab');
 const tabContainer = document.querySelector('.operations__tab-container')
 const tabContent = document.querySelectorAll('.operations__content');
@@ -132,31 +131,70 @@ const observer = new IntersectionObserver(callBack, options)
 observer.observe(document.querySelector('.header'))
 
 // всплытие секций
-const allSections = document.querySelectorAll('.section');
+// const allSections = document.querySelectorAll('.section');
 
-function revealSections(entries, observe) {
-  if (entries[0].isIntersecting) {
-    entries[0].target.classList.remove('section--hidden');
-    observe.unobserve(entries[0].target);
-  }
-}
+// function revealSections(entries, observe) {
+//   if (entries[0].isIntersecting) {
+//     entries[0].target.classList.remove('section--hidden');
+//     observe.unobserve(entries[0].target);
+//   }
+// }
 
-const sectionsObserver = new IntersectionObserver(revealSections, {threshold: 0.15});
+// const sectionsObserver = new IntersectionObserver(revealSections, {threshold: 0.15});
 
-allSections.forEach(section => {
-  sectionsObserver.observe(section);
-  section.classList.add('section--hidden');
-})
+// allSections.forEach(section => {
+//   sectionsObserver.observe(section);
+//   section.classList.add('section--hidden');
+// })
 
 // ленивая загрузка изображений
 const images = document.querySelectorAll('img[data-src]');
 
 function loadImg(entries, observer) {
+  if (!entries[0].isIntersecting) return;
   entries[0].target.src = entries[0].target.dataset.src;
-  entries[0].target.classList.remove('lazy-img');
+
+  entries[0].target.addEventListener('load', function () {
+    entries[0].target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entries[0].target);
 };
 const imgObserver = new IntersectionObserver(loadImg, {threshold: 0.15});
 
 images.forEach(image => {
   imgObserver.observe(image);
 })
+
+// слайдер
+const slides = document.querySelectorAll('.slide');
+const slider = document.querySelector('.slider');
+const btnRight = document.querySelector('.slider__btn--right');
+const btnLeft = document.querySelector('.slider__btn--left');
+const maxSlides = slides.length;
+
+let currentSlide = 0;
+
+function goToSlide(slide) {
+  slides.forEach(function (s, id) {
+    s.style.transform = `translateX(${100 * (id - slide)}%)`;
+  });
+}
+
+goToSlide(0);
+
+function nextSlide() {
+  if (currentSlide === maxSlides - 1) {
+    currentSlide = 0;
+  } else {currentSlide++};
+  goToSlide(currentSlide);
+}
+
+function prevSlide() {
+  if (currentSlide === 0) {
+    currentSlide = maxSlides - 1;
+  } else {currentSlide--};
+  goToSlide(currentSlide);
+}
+
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);
